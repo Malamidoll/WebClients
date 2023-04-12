@@ -46,6 +46,7 @@ const CalendarContainerViewBlurred = () => {
             containerRef={containerRef}
             addresses={[]}
             calendars={[]}
+            user={{} as any}
             calendarUserSettings={calendarUserSettings}
         >
             <TimeGrid

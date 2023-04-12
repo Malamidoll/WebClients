@@ -58,8 +58,9 @@ import { fromUTCDate, toLocalDate } from '@proton/shared/lib/date/timezone';
 import { isAppInView } from '@proton/shared/lib/drawer/helpers';
 import { canonicalizeInternalEmail, validateEmailAddress } from '@proton/shared/lib/helpers/email';
 import { dateLocale } from '@proton/shared/lib/i18n';
-import { Address } from '@proton/shared/lib/interfaces';
+import { Address, UserModel } from '@proton/shared/lib/interfaces';
 import { AttendeeModel, CalendarUserSettings, VisualCalendar } from '@proton/shared/lib/interfaces/calendar';
+import { hasPaidMail } from '@proton/shared/lib/user/helpers';
 import isTruthy from '@proton/utils/isTruthy';
 import uniqueBy from '@proton/utils/uniqueBy';
 
@@ -104,6 +105,7 @@ interface Props {
     onChangeDateRange: (date: Date, range: number, resetRange?: boolean) => void;
     containerRef: Ref<HTMLDivElement>;
     addresses: Address[];
+    user: UserModel;
     calendarUserSettings: CalendarUserSettings;
 }
 
@@ -136,6 +138,7 @@ const CalendarContainerView = ({
     containerRef,
 
     addresses,
+    user,
 
     calendarUserSettings,
 }: Props) => {
@@ -383,7 +386,7 @@ const CalendarContainerView = ({
     const [{ isWelcomeFlow }] = useWelcomeFlags();
     const { show, onDisplayed } = useSpotlightOnFeature(
         FeatureCode.CalendarSharingSpotlight,
-        !isWelcomeFlow && !isDrawerApp && !isNarrow && calendarSharingEnabled,
+        !isWelcomeFlow && !isDrawerApp && !isNarrow && calendarSharingEnabled && hasPaidMail(user),
         {
             alpha: 0,
             beta: Date.UTC(2023, 3, 5, 12),
